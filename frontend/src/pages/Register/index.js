@@ -1,13 +1,41 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './styles.css';
 
 import {Link} from 'react-router-dom';
 import {FiArrowLeft} from 'react-icons/fi';
 
-import logoImg from '../../Assets/logo.svg'
+import logoImg from '../../Assets/logo.svg';
+
+import api from '../../services/api';
 
 
 export default function Register(){
+
+  const [Name, setName] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Whatsapp, setWhatsapp] = useState('');
+  const [Cidade, setCidade] = useState('');
+  const [UF, setUF] = useState('');
+
+  async function handleRegister(event){
+    event.preventDefault();
+
+    const data = {
+      Name,
+      Email,
+      Whatsapp,
+      Cidade,
+      UF
+    }
+
+    try{
+      const response = await api.post('ongs', data);
+      alert(`Seu ID:${response.data.id}`)
+    }catch(err){
+      alert('Erro no cadastro. Tente novamente!\n');
+    }
+  }
+
   return(
     <div className="register-container">
       <div className="content">
@@ -21,13 +49,33 @@ export default function Register(){
             Já tenho cadastro
           </Link>        
         </section>
-        <form>
-          <input placeholder="Nome da ONG"/>
-          <input type="email" placeholder="E-mail"/>
-          <input placeholder="Whatsapp"/>
+        <form onSubmit={handleRegister}>
+          <input 
+            placeholder="Nome da ONG"
+            value={Name}
+            onChange={event=>setName(event.target.value)}
+          />
+          <input 
+            type="email" 
+            placeholder="E-mail"
+            value={Email}
+            onChange={event=>setEmail(event.target.value)}
+          />
+          <input 
+            placeholder="Whatsapp"
+            value={Whatsapp}
+            onChange={event=>setWhatsapp(event.target.value)}            
+            />
           <div className="input-group">
-            <input placeholder="Cidade"/>
-            <input placeholder="UF" style={{width:80}}/>
+            <input 
+              placeholder="Cidade"
+              value={Cidade}
+              onChange={event=>setCidade(event.target.value)}
+              />
+            <input placeholder="UF" style={{width:80}}
+              value={UF}
+              onChange={event=>setUF(event.target.value)}              
+            />
           </div>
 
           <button className="button" type="submit">Cadastrar</button>
